@@ -1,0 +1,95 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.schemaContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.schemaHeader {
+  display: flex;
+  column-gap: 20px;
+  align-items: center;
+}
+
+.schemaHeader input {
+  outline: none;
+  padding: 10px 20px;
+}
+
+.schemaHeader div {
+  border: none;
+  background-color: lightcoral;
+  color: white;
+  font-size: 12px;
+  padding: 10px 20px;
+  display: grid;
+  place-items: center;
+}
+
+.schemaBody {
+  border-left: 2px solid gray;
+  margin-left: 20px;
+  padding: 20px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.schemaBody .validationDiv {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1fr;
+  align-items: center;
+}
+.schemaBody .validationDiv input {
+  width: 100px;
+  outline: none;
+  padding: 10px;
+}
+
+.addValidationBtn {
+  border: none;
+  outline: none;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.properties {
+  background-color: lightblue;
+  width: fit-content;
+  padding: 10px;
+  color: white;
+}
+
+.removeBtn {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: none;
+  display: grid;
+  place-items: center;
+  background-color: lightpink;
+  color: white;
+  cursor: pointer;
+}
+
+.removeSchema {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: none;
+  display: grid;
+  place-items: center;
+  background-color: lightskyblue;
+  color: white;
+  cursor: pointer;
+}
