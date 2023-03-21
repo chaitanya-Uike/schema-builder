@@ -50,9 +50,8 @@ function ObjectSchemaNode({
       const key = instancePath[i];
       property = property[key];
     }
-    delete property[instancePath[instancePath.length - 1]];
-
-    setSchema({ ...rootSchema });
+    const index = instancePath[instancePath.length - 1];
+    property = [...property.splice(index, 1)];
   }
 
   return (
