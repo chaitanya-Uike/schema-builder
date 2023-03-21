@@ -10,7 +10,7 @@ function AddSchemaBtn() {
         className="addSchemaBtn"
         onClick={() => setShowSelector(!showSelector)}
       >
-        Add Schema
+        + Add Schema
       </button>
       {showSelector && (
         <SchemaSelector style={{ transform: "translate(45%,-50%)" }} />

@@ -1,12 +1,19 @@
-import { useState } from "react";
-import { Schema } from "../../types";
-import AddSchemaBtn from "../AddSchemaBtn";
 import "./style.css";
+import DropDown from "../Dropdown";
 
 function SchemaEditor() {
-  const [schema, setSchema] = useState<Schema | null>(null);
-
-  return <div>{!schema && <AddSchemaBtn />}</div>;
+  return (
+    <div>
+      <div className="schemaContainer">
+        <input
+          type="text"
+          className="schemaNameInput"
+          placeholder="schema name"
+        />
+        <DropDown />
+      </div>
+    </div>
+  );
 }
 
 export default SchemaEditor;

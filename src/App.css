@@ -5,7 +5,7 @@
   place-items: center;
 }
 
-.schemaContainer {
+/* .schemaContainer {
   display: flex;
   flex-direction: column;
 }
@@ -92,4 +92,4 @@
   background-color: lightskyblue;
   color: white;
   cursor: pointer;
-}
+} */

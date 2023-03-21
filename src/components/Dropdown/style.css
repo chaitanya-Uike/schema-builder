@@ -1,0 +1,73 @@
+.dropDownContainer {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dropDownContainer .titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #dadee1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  width: 175px;
+  transition: box-shadow cubic-bezier(0.68, -0.55, 0.265, 1.55) 300ms;
+  cursor: pointer;
+  background-color: white;
+}
+
+.dropDownContainer .titleContainer:hover {
+  -webkit-box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.809);
+  -moz-box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.809);
+  box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.809);
+}
+
+.dropDownContainer .dropDown {
+  border: 1px solid #dadee1;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 999;
+  top: 45px;
+  padding: 12px;
+  width: 175px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  box-shadow: 0 16px 16px -4px rgba(16, 24, 40, 0.078);
+}
+
+.dropDownContainer .dropDown .dropDownSection h4 {
+  list-style-type: none;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+.dropDownContainer .dropDown .dropDownSection li {
+  list-style-type: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7e8d9d;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+.dropDownContainer .dropDown .dropDownSection li:hover {
+  background-color: #f8f4fe;
+  color: #6236bb;
+}
+
+.dropDownContainer .dropDown .dropDownSection ul {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropDownActive {
+  -webkit-box-shadow: 0px 0px 0px 2px #6236bb83;
+  -moz-box-shadow: 0px 0px 0px 2px #6236bb83;
+  box-shadow: 0px 0px 2px 2px #6236bb83 !important;
+  border: #6236bb !important;
+}
