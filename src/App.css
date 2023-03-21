@@ -1,13 +1,11 @@
 .App {
   width: 100vw;
-  height: 100vh;
-  display: grid;
-  place-items: center;
+  height: fit-content;
+  padding: 40px;
 }
 
-/* .schemaContainer {
-  display: flex;
-  flex-direction: column;
+.schemaContainer {
+  position: relative;
 }
 
 .schemaHeader {
@@ -33,7 +31,7 @@
 
 .schemaBody {
   border-left: 2px solid gray;
-  margin-left: 20px;
+  margin-left: 60px;
   padding: 20px;
   padding-bottom: 0;
   display: flex;
@@ -43,10 +41,12 @@
 }
 
 .schemaBody .validationDiv {
-  width: 100%;
+  width: 250px;
   display: grid;
   grid-template-columns: 1.5fr 3fr 1fr;
   align-items: center;
+  position: relative;
+  padding-left: 10px;
 }
 .schemaBody .validationDiv input {
   width: 100px;
@@ -92,4 +92,72 @@
   background-color: lightskyblue;
   color: white;
   cursor: pointer;
-} */
+}
+
+.addPropertyBtnContainer {
+  position: relative;
+}
+
+.addPropertyBtnContainer .typeSelector {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  row-gap: 6px;
+  border: 1px solid gray;
+  width: fit-content;
+  border-radius: 5px;
+  position: absolute;
+  z-index: 999;
+  top: 40px;
+  left: 20px;
+}
+
+.addPropertyBtnContainer .typeSelector p {
+  padding: 5px 8px;
+  cursor: pointer;
+}
+.addPropertyBtnContainer .typeSelector p:hover {
+  background-color: lightpink;
+  color: red;
+}
+
+.expandBtn {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: aquamarine;
+  transition: all 300ms ease-in-out;
+  font-size: 10px;
+  color: green;
+}
+
+.connector {
+  border-top: 2px solid gray;
+  position: absolute;
+  width: 20px;
+  left: -20px;
+  top: 20px;
+}
+
+.tailRemover {
+  width: 10px;
+  height: 15px;
+  background-color: white;
+  position: absolute;
+  left: -22px;
+  top: 22px;
+}
+
+.endBulb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: gray;
+  position: absolute;
+  bottom: 0;
+  left: 51px;
+}

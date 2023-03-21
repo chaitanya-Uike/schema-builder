@@ -1,65 +1,27 @@
+import { useState } from "react";
 import "./App.css";
-import SchemaEditor from "./components/SchemaEditor";
+import ObjectSchemaNode from "./components/ObjectSchema";
+import Test from "./components/Test";
+import { ObjectSchema } from "./types";
+
 function App() {
+  const [schema, setSchema] = useState<ObjectSchema>({
+    name: "employee_schema",
+    type: "object",
+    properties: [],
+    required: [],
+  });
+
+  console.log(schema);
+
   return (
     <div className="App">
-      <SchemaEditor />
-      {/* <div className="schemaContainer">
-        <div className="schemaHeader">
-          <input type="text" />
-          <div>OBJECT</div>
-          <button className="removeSchema">X</button>
-        </div>
-        <div className="schemaBody">
-          <div>
-            <div className="properties">properties</div>
-            <div className="schemaBody">
-              <div className="schemaContainer">
-                <div className="schemaHeader">
-                  <input type="text" />
-                  <div>STRING</div>
-                  <button className="removeSchema">X</button>
-                </div>
-                <div className="schemaBody">
-                  <div className="validationDiv">
-                    <div>format</div>
-                    <input type="text" />
-                    <button className="removeBtn">X</button>
-                  </div>
-                  <button className="addValidationBtn">+ add validation</button>
-                </div>
-              </div>
-
-              <div className="schemaContainer">
-                <div className="schemaHeader">
-                  <input type="text" />
-                  <div>STRING</div>
-                  <button className="removeSchema">X</button>
-                </div>
-                <div className="schemaBody">
-                  <div className="validationDiv">
-                    <div>min</div>
-                    <input type="number" />
-                    <button className="removeBtn">X</button>
-                  </div>
-                  <div className="validationDiv">
-                    <div>max</div>
-                    <input type="number" />
-                    <button className="removeBtn">X</button>
-                  </div>
-                  <div className="validationDiv">
-                    <div>match</div>
-                    <input type="text" />
-                    <button className="removeBtn">X</button>
-                  </div>
-                  <button className="addValidationBtn">+ add validation</button>
-                </div>
-              </div>
-              <button className="addValidationBtn">+ add property</button>
-            </div>
-          </div>
-        </div>
-      </div> */}
+      <ObjectSchemaNode
+        instancePath={[]}
+        rootSchema={schema}
+        schema={schema}
+        setSchema={setSchema}
+      />
     </div>
   );
 }

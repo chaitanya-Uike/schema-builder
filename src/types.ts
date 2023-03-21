@@ -1,21 +1,18 @@
 export interface StringSchema {
+    name: string
     type: "string"
-    min?: number
-    max?: number
-    length?: number
-    match?: RegExp
-    includes?: string
-    startsWith?: string
-    endsWith?: string
-    format?: "email" | "url" | "uuid" | "ip" | "phone-no" | "date"
-    isAlpha?: boolean
-    isAlNum?: boolean
-    isNum?: boolean
+    validations: validation[]
+}
+
+export interface validation {
+    name: string
+    value: string
 }
 
 export interface ObjectSchema {
+    name: string
     type: "object",
-    properties: { [property: string]: StringSchema | ObjectSchema }
+    properties: (StringSchema | ObjectSchema)[]
     required: string[]
 }
 
