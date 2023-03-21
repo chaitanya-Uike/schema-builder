@@ -1,0 +1,48 @@
+.schemaSelector {
+  border: 1px solid #c2ced8;
+  background-color: white;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 8px;
+  box-shadow: 0 16px 16px -4px rgba(16, 24, 40, 0.078);
+  position: absolute;
+}
+
+.schemaSelector input {
+  border: 1px solid #c2ced8;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  outline: none;
+  width: 300px;
+}
+
+.schemaSelector ul {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-left: 40px;
+}
+
+.schemaSelector li {
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: background-color ease-in-out 150ms;
+  color: #8546ad;
+}
+
+.schemaSelector li:hover {
+  background-color: #f8f4fe;
+}
+
+.createSchemaContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.createSchemaContainer h4 {
+  color: gray;
+}

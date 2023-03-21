@@ -1,0 +1,19 @@
+.addSchemaBtnContainer {
+  position: relative;
+}
+
+.addSchemaBtn {
+  border: 1px solid #bfc5ca;
+  outline: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #808d9c;
+  background-color: #f6f6f7;
+  font-weight: 600;
+  transition: background-color ease-in-out 250ms;
+}
+
+.addSchemaBtn:hover {
+  background-color: #e7e7e7ab;
+}
