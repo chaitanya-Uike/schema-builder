@@ -2,10 +2,15 @@ import { useState } from "react";
 import "./style.css";
 import { BsCheck } from "react-icons/bs";
 
-function CheckBox() {
+interface Props {
+  onChange: (value: boolean) => void;
+}
+
+function CheckBox({ onChange }: Props) {
   const [checked, setChecked] = useState(false);
 
   function checkboxClicked() {
+    onChange(!checked);
     setChecked(!checked);
   }
 

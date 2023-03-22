@@ -139,7 +139,11 @@ function ObjectSchemaNode({
               {instanceSchema.properties.map((subSchema, index) => {
                 if (subSchema.type === "object")
                   return (
-                    <PropertyNodeWrapper key={subSchema.id}>
+                    <PropertyNodeWrapper
+                      key={subSchema.id}
+                      instanceSchema={instanceSchema}
+                      propertyName={subSchema.name}
+                    >
                       <ObjectSchemaNode
                         instancePath={[...instancePath, "properties", index]}
                         rootSchema={rootSchema}
@@ -150,7 +154,11 @@ function ObjectSchemaNode({
                   );
                 if (subSchema.type === "string") {
                   return (
-                    <PropertyNodeWrapper key={subSchema.id}>
+                    <PropertyNodeWrapper
+                      key={subSchema.id}
+                      instanceSchema={instanceSchema}
+                      propertyName={subSchema.name}
+                    >
                       <StringSchemaNode
                         instancePath={[...instancePath, "properties", index]}
                         rootSchema={rootSchema}
@@ -172,13 +180,32 @@ function ObjectSchemaNode({
   );
 }
 
-function PropertyNodeWrapper({ children }: { children: React.ReactNode }) {
+function PropertyNodeWrapper({
+  children,
+  instanceSchema,
+  propertyName,
+}: {
+  children: React.ReactNode;
+  instanceSchema: ObjectSchema;
+  propertyName: string;
+}) {
   return (
     <div className="propertyNodeWrapper">
       {children}
       <div className="requiredContainer">
         <p>*required</p>
-        <CheckBox />
+        <CheckBox
+          onChange={(checked) => {
+            if (checked) {
+              instanceSchema.required.push(propertyName);
+            } else {
+              const index = instanceSchema.required.findIndex(
+                (prop) => prop === propertyName
+              );
+              instanceSchema.required.splice(index, 1);
+            }
+          }}
+        />
       </div>
     </div>
   );
