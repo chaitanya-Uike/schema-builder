@@ -5,6 +5,7 @@ import { MdExpandMore } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import HoverableIcon from "../HoverableIcon";
 import { hashString } from "../../utils";
+import CheckBox from "../CheckBox";
 
 interface Props {
   rootSchema: ObjectSchema;
@@ -45,20 +46,26 @@ function ObjectSchemaNode({
   }, [name]);
 
   function addProperty(type: string) {
+    // we need to add a unique id to use as key
+    const hash = hashString(
+      instancePath.join("") + Math.random() * 1000,
+      Math.random() * 1000
+    );
+
     if (type === "object") {
       instanceSchema.properties.push({
         name: generatePropName(instanceSchema),
         type: "object",
         properties: [],
         required: [],
-        id: hashString(instancePath.join("") + Math.random() * 1000, 1),
+        id: hash,
       });
     } else if (type === "string") {
       instanceSchema.properties.push({
         name: generatePropName(instanceSchema),
         type: "string",
         validations: [],
-        id: hashString(instancePath.join("") + Math.random() * 1000, 2),
+        id: hash,
       });
     }
     setSchema({ ...rootSchema });
@@ -132,23 +139,25 @@ function ObjectSchemaNode({
               {instanceSchema.properties.map((subSchema, index) => {
                 if (subSchema.type === "object")
                   return (
-                    <ObjectSchemaNode
-                      instancePath={[...instancePath, "properties", index]}
-                      rootSchema={rootSchema}
-                      instanceSchema={subSchema}
-                      setSchema={setSchema}
-                      key={subSchema.id}
-                    />
+                    <PropertyNodeWrapper key={subSchema.id}>
+                      <ObjectSchemaNode
+                        instancePath={[...instancePath, "properties", index]}
+                        rootSchema={rootSchema}
+                        instanceSchema={subSchema}
+                        setSchema={setSchema}
+                      />
+                    </PropertyNodeWrapper>
                   );
                 if (subSchema.type === "string") {
                   return (
-                    <StringSchemaNode
-                      instancePath={[...instancePath, "properties", index]}
-                      rootSchema={rootSchema}
-                      instanceSchema={subSchema}
-                      setSchema={setSchema}
-                      key={subSchema.id}
-                    />
+                    <PropertyNodeWrapper key={subSchema.id}>
+                      <StringSchemaNode
+                        instancePath={[...instancePath, "properties", index]}
+                        rootSchema={rootSchema}
+                        instanceSchema={subSchema}
+                        setSchema={setSchema}
+                      />
+                    </PropertyNodeWrapper>
                   );
                 }
               })}
@@ -159,6 +168,18 @@ function ObjectSchemaNode({
           <div className="endBulb"></div>
         </div>
       )}
+    </div>
+  );
+}
+
+function PropertyNodeWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="propertyNodeWrapper">
+      {children}
+      <div className="requiredContainer">
+        <p>*required</p>
+        <CheckBox />
+      </div>
     </div>
   );
 }

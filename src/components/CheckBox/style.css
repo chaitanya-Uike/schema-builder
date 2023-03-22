@@ -1,0 +1,44 @@
+.checkboxWrapper {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  background-color: white;
+}
+
+.checkboxBackdrop {
+  background-color: #c3c8cc;
+  opacity: 0.3;
+  position: absolute;
+  border-radius: 50%;
+  height: 0;
+  width: 0;
+  z-index: -1;
+  transition-property: height, width;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition-duration: 450ms;
+}
+
+.checkboxWrapper:hover > .checkboxBackdrop {
+  height: 100%;
+  width: 100%;
+}
+
+.checkboxActive {
+  background-color: #6b1f99;
+  color: white;
+  border: none;
+}

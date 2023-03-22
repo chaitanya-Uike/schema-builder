@@ -15,14 +15,14 @@
   height: 0;
   border-radius: 50%;
   z-index: -1;
+  transition-property: height, width;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition-duration: 450ms;
 }
 
 .hoverableIconContainer:hover > .hoverableIconBackdrop {
   width: 100%;
   height: 100%;
-  transition-property: height, width, color;
-  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  transition-duration: 400ms;
 }
 
 .hoverableIconContainer:hover {
