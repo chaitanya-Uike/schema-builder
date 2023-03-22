@@ -21,6 +21,7 @@ const validations: validationType[] = [
   { name: "min", argType: "number" },
   { name: "max", argType: "number" },
   { name: "length", argType: "number" },
+  { name: "startsWith", argType: "string" },
 ];
 
 function StringSchemaNode({

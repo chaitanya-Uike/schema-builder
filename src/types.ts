@@ -2,6 +2,7 @@ export interface StringSchema {
     name: string
     type: "string"
     validations: validation[]
+    id: string
 }
 
 export interface validation {
@@ -14,6 +15,7 @@ export interface ObjectSchema {
     type: "object",
     properties: (StringSchema | ObjectSchema)[]
     required: string[]
+    id: string
 }
 
 export type Schema = StringSchema | ObjectSchema

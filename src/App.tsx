@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import ObjectSchemaNode from "./components/ObjectSchema";
 import { ObjectSchema } from "./types";
+import { hashString } from "./utils";
 
 function App() {
   const [schema, setSchema] = useState<ObjectSchema | null>({
@@ -9,6 +10,7 @@ function App() {
     type: "object",
     properties: [],
     required: [],
+    id: hashString("employee_schema"),
   });
 
   console.log(schema);

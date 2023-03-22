@@ -4,6 +4,7 @@ import StringSchemaNode from "../StringSchema";
 import { MdExpandMore } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import HoverableIcon from "../HoverableIcon";
+import { hashString } from "../../utils";
 
 interface Props {
   rootSchema: ObjectSchema;
@@ -50,12 +51,14 @@ function ObjectSchemaNode({
         type: "object",
         properties: [],
         required: [],
+        id: hashString(instancePath.join("") + Math.random() * 1000, 1),
       });
     } else if (type === "string") {
       instanceSchema.properties.push({
         name: generatePropName(instanceSchema),
         type: "string",
         validations: [],
+        id: hashString(instancePath.join("") + Math.random() * 1000, 2),
       });
     }
     setSchema({ ...rootSchema });
@@ -134,7 +137,7 @@ function ObjectSchemaNode({
                       rootSchema={rootSchema}
                       instanceSchema={subSchema}
                       setSchema={setSchema}
-                      key={index}
+                      key={subSchema.id}
                     />
                   );
                 if (subSchema.type === "string") {
@@ -144,7 +147,7 @@ function ObjectSchemaNode({
                       rootSchema={rootSchema}
                       instanceSchema={subSchema}
                       setSchema={setSchema}
-                      key={index}
+                      key={subSchema.id}
                     />
                   );
                 }
