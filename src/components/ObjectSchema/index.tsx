@@ -1,16 +1,19 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { ObjectSchema } from "../../types";
 import StringSchemaNode from "../StringSchema";
+import { MdExpandMore } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
+import HoverableIcon from "../HoverableIcon";
 
 interface Props {
   rootSchema: ObjectSchema;
   instancePath: (string | number)[];
-  schema: ObjectSchema;
-  setSchema: Dispatch<SetStateAction<ObjectSchema>>;
+  instanceSchema: ObjectSchema;
+  setSchema: Dispatch<SetStateAction<ObjectSchema | null>>;
 }
 
-function propertyNameGenerator(schema: ObjectSchema) {
-  const propPrefix = "my_property";
+function generatePropName(schema: ObjectSchema) {
+  const propPrefix = "schema";
   const index = schema.properties.filter((prop) =>
     prop.name.startsWith(propPrefix)
   ).length;
@@ -21,22 +24,36 @@ function propertyNameGenerator(schema: ObjectSchema) {
 function ObjectSchemaNode({
   instancePath,
   rootSchema,
-  schema,
+  instanceSchema,
   setSchema,
 }: Props) {
+  const [name, setName] = useState(instanceSchema.name);
   const [showSchemaBody, setShowSchemaBody] = useState(false);
+  const timeoutRef = useRef<number | undefined>();
+
+  useEffect(() => {
+    // debounce the setting of schema name
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      if (instanceSchema.name !== name) {
+        instanceSchema.name = name;
+        setSchema({ ...rootSchema });
+      }
+    }, 750);
+  }, [name]);
 
   function addProperty(type: string) {
     if (type === "object") {
-      schema.properties.push({
-        name: propertyNameGenerator(schema),
+      instanceSchema.properties.push({
+        name: generatePropName(instanceSchema),
         type: "object",
         properties: [],
         required: [],
       });
     } else if (type === "string") {
-      schema.properties.push({
-        name: propertyNameGenerator(schema),
+      instanceSchema.properties.push({
+        name: generatePropName(instanceSchema),
         type: "string",
         validations: [],
       });
@@ -45,40 +62,63 @@ function ObjectSchemaNode({
   }
 
   function removeProperty() {
-    const index = instancePath.pop();
-    const property = instancePath.reduce((acc, currPath) => {
-      return acc[currPath];
-    }, rootSchema as { [key: string]: any });
+    if (instancePath.length === 0) {
+      setSchema(null);
+    } else {
+      const index = instancePath.pop();
+      const property = instancePath.reduce((acc, currPath) => {
+        return acc[currPath];
+      }, rootSchema as { [key: string]: any });
 
-    property.splice(index, 1);
-    setSchema({ ...rootSchema });
+      property.splice(index, 1);
+      setSchema({ ...rootSchema });
+    }
   }
 
   return (
     <div className="schemaContainer">
       {instancePath.length > 0 && <div className="connector"></div>}
       <div className="schemaHeader">
-        <p
-          className="expandBtn"
+        <HoverableIcon
+          Icon={MdExpandMore}
           onClick={() => {
             setShowSchemaBody(!showSchemaBody);
           }}
-          style={{ transform: showSchemaBody ? `rotate(180deg)` : "" }}
-        >
-          v
-        </p>
-        <input
-          type="text"
-          value={schema.name}
-          onChange={(e) => {
-            schema.name = e.target.value;
-            setSchema({ ...rootSchema });
+          style={{
+            transform: showSchemaBody ? `rotate(180deg)` : "",
+            fontSize: 30,
+            color: "#bec5c8",
+            transition: "all 300ms linear",
           }}
         />
-        <div>OBJECT</div>
-        <button className="removeSchema" onClick={removeProperty}>
-          X
-        </button>
+        <input
+          className="schemaNameInput"
+          placeholder="schema name"
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+        <div
+          className="schemaType"
+          style={{
+            backgroundColor: "rgb(236, 248, 241)",
+            color: "rgb(0, 163, 86)",
+          }}
+        >
+          OBJECT
+        </div>
+        <HoverableIcon
+          Icon={IoClose}
+          onClick={removeProperty}
+          style={{
+            fontSize: 23,
+            color: "#bec5c8",
+            transition: "all 300ms linear",
+            marginLeft: 20,
+          }}
+        />
       </div>
       {showSchemaBody && (
         <div className="schemaBody">
@@ -86,13 +126,13 @@ function ObjectSchemaNode({
             <div className="connector"></div>
             <div className="properties">properties</div>
             <div className="schemaBody" style={{ marginLeft: 20 }}>
-              {schema.properties.map((subSchema, index) => {
+              {instanceSchema.properties.map((subSchema, index) => {
                 if (subSchema.type === "object")
                   return (
                     <ObjectSchemaNode
                       instancePath={[...instancePath, "properties", index]}
                       rootSchema={rootSchema}
-                      schema={subSchema}
+                      instanceSchema={subSchema}
                       setSchema={setSchema}
                       key={index}
                     />
@@ -102,7 +142,7 @@ function ObjectSchemaNode({
                     <StringSchemaNode
                       instancePath={[...instancePath, "properties", index]}
                       rootSchema={rootSchema}
-                      schema={subSchema}
+                      instanceSchema={subSchema}
                       setSchema={setSchema}
                       key={index}
                     />
@@ -110,6 +150,7 @@ function ObjectSchemaNode({
                 }
               })}
               <AddPropertyBtn addProperty={addProperty} />
+              <div className="tailRemover"></div>
             </div>
           </div>
           <div className="endBulb"></div>
@@ -129,9 +170,10 @@ function AddPropertyBtn({
   return (
     <div className="addPropertyBtnContainer">
       <div className="connector"></div>
-      <div className="tailRemover"></div>
       <button
-        className="addValidationBtn"
+        className={`addValidationBtn ${
+          showSelector ? "addValidationBtnActive" : ""
+        }`}
         onClick={() => {
           setShowSelector(!showSelector);
         }}
@@ -140,19 +182,21 @@ function AddPropertyBtn({
       </button>
       {showSelector && (
         <div className="typeSelector">
-          {types.map((type) => {
-            return (
-              <p
-                key={type}
-                onClick={() => {
-                  addProperty(type);
-                  setShowSelector(false);
-                }}
-              >
-                {type.toUpperCase()}
-              </p>
-            );
-          })}
+          <ul>
+            {types.map((type) => {
+              return (
+                <li
+                  key={type}
+                  onClick={() => {
+                    addProperty(type);
+                    setShowSelector(false);
+                  }}
+                >
+                  {type.toUpperCase()}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
     </div>

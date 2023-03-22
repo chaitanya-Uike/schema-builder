@@ -10,7 +10,7 @@
 
 .schemaHeader {
   display: flex;
-  column-gap: 20px;
+  column-gap: 6px;
   align-items: center;
 }
 
@@ -19,18 +19,19 @@
   padding: 10px 20px;
 }
 
-.schemaHeader div {
+.schemaHeader .schemaType {
   border: none;
-  background-color: lightcoral;
-  color: white;
+  margin-left: 20px;
   font-size: 12px;
+  border-radius: 16px;
   padding: 10px 20px;
   display: grid;
   place-items: center;
 }
 
 .schemaBody {
-  border-left: 2px solid gray;
+  position: relative;
+  border-left: 2px solid #dadee1;
   margin-left: 60px;
   padding: 20px;
   padding-bottom: 0;
@@ -41,33 +42,53 @@
 }
 
 .schemaBody .validationDiv {
-  width: 250px;
+  width: 300px;
   display: grid;
   grid-template-columns: 1.5fr 3fr 1fr;
   align-items: center;
   position: relative;
   padding-left: 10px;
 }
+
+.schemaBody .validationDiv .validationName {
+  color: #6f4bb7;
+}
+
 .schemaBody .validationDiv input {
-  width: 100px;
+  width: 150px;
   outline: none;
   padding: 10px;
 }
 
 .addValidationBtn {
-  border: none;
+  border: 1px solid #dadee1;
+  background-color: white;
+  color: #7e8d9d;
   outline: none;
   width: fit-content;
   padding: 10px;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color ease-in-out 300ms;
+}
+
+.addValidationBtn:hover {
+  background-color: #dadee144;
+}
+
+.addValidationBtnActive {
+  border-color: #9d81d4;
+  color: #6f4bb7;
+  background-color: #f7f2ff !important;
 }
 
 .properties {
-  background-color: lightblue;
+  background-color: #e2f1fc;
+  color: #74aef1;
   width: fit-content;
+  font-size: 14px;
   padding: 10px;
-  color: white;
+  border-radius: 8px;
 }
 
 .removeBtn {
@@ -83,15 +104,12 @@
 }
 
 .removeSchema {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  border: none;
   display: grid;
   place-items: center;
-  background-color: lightskyblue;
-  color: white;
   cursor: pointer;
+  font-size: 23px;
+  background-color: white;
+  border: none;
 }
 
 .addPropertyBtnContainer {
@@ -99,44 +117,45 @@
 }
 
 .addPropertyBtnContainer .typeSelector {
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-  row-gap: 6px;
-  border: 1px solid gray;
-  width: fit-content;
-  border-radius: 5px;
+  border: 1px solid #dadee1;
+  border-radius: 8px;
   position: absolute;
   z-index: 999;
-  top: 40px;
-  left: 20px;
+  top: 45px;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  box-shadow: 0 16px 16px -4px rgba(16, 24, 40, 0.078);
+  overflow: hidden;
+  background-color: white;
 }
 
-.addPropertyBtnContainer .typeSelector p {
-  padding: 5px 8px;
-  cursor: pointer;
-}
-.addPropertyBtnContainer .typeSelector p:hover {
-  background-color: lightpink;
-  color: red;
+.addPropertyBtnContainer .typeSelector ul {
+  display: flex;
+  flex-direction: column;
 }
 
-.expandBtn {
+.addPropertyBtnContainer .typeSelector li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style-type: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7e8d9d;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background-color: aquamarine;
-  transition: all 300ms ease-in-out;
-  font-size: 10px;
-  color: green;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+.addPropertyBtnContainer .typeSelector li:hover {
+  background-color: #f8f4fe;
+  color: #6236bb;
 }
 
 .connector {
-  border-top: 2px solid gray;
+  border-top: 2px solid #dadee1;
   position: absolute;
   width: 20px;
   left: -20px;
@@ -145,19 +164,44 @@
 
 .tailRemover {
   width: 10px;
-  height: 15px;
+  height: 15.5px;
   background-color: white;
   position: absolute;
-  left: -22px;
-  top: 22px;
+  bottom: 0px;
+  left: -2px;
 }
 
 .endBulb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: gray;
+  background-color: #dadee1;
   position: absolute;
-  bottom: 0;
-  left: 51px;
+  bottom: -10px;
+  left: -10px;
+}
+
+.schemaNameInput {
+  outline: none;
+  border: 1px solid #dadee1;
+  border-radius: 8px;
+  padding: 13px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: box-shadow cubic-bezier(0.68, -0.55, 0.265, 1.55) 300ms;
+}
+
+.schemaNameInput:hover {
+  -webkit-box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.809);
+  -moz-box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.809);
+  box-shadow: 0px 0px 0px 2px rgba(214, 214, 214, 0.6);
+}
+
+.schemaNameInput:focus {
+  box-shadow: none;
+  border-color: #a879d1;
+}
+
+.schemaNameInput::placeholder {
+  color: gray;
 }

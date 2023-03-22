@@ -1,32 +1,66 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { ObjectSchema, StringSchema } from "../../types";
+import { Dispatch, SetStateAction, useState, useRef, useEffect } from "react";
+import { ObjectSchema, StringSchema, validation } from "../../types";
+import { MdExpandMore } from "react-icons/md";
+import { IoClose } from "react-icons/io5";
+import { BsCheck } from "react-icons/bs";
+import HoverableIcon from "../HoverableIcon";
 
 interface Props {
   rootSchema: ObjectSchema;
   instancePath: (string | number)[];
-  schema: StringSchema;
-  setSchema: Dispatch<SetStateAction<ObjectSchema>>;
+  instanceSchema: StringSchema;
+  setSchema: Dispatch<SetStateAction<ObjectSchema | null>>;
 }
+
+type validationType = {
+  name: string;
+  argType: "string" | "number";
+};
+
+const validations: validationType[] = [
+  { name: "min", argType: "number" },
+  { name: "max", argType: "number" },
+  { name: "length", argType: "number" },
+];
 
 function StringSchemaNode({
   instancePath,
   rootSchema,
-  schema,
+  instanceSchema,
   setSchema,
 }: Props) {
+  const [name, setName] = useState(instanceSchema.name);
   const [showSchemaBody, setShowSchemaBody] = useState(false);
-  const validations = ["min", "max", "length"];
+  const timeoutRef = useRef<number | undefined>();
+
+  useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(() => {
+      if (instanceSchema.name !== name) {
+        instanceSchema.name = name;
+        setSchema({ ...rootSchema });
+      }
+    }, 500);
+  }, [name]);
 
   function addValidation(validation: string) {
-    const present = schema.validations.some((val) => val.name === validation);
+    const present = instanceSchema.validations.some(
+      (val) => val.name === validation
+    );
 
     if (!present) {
-      schema.validations.push({
+      instanceSchema.validations.push({
         name: validation,
         value: "",
       });
       setSchema({ ...rootSchema });
     }
+  }
+
+  function removeValidation(index: number) {
+    instanceSchema.validations.splice(index, 1);
+    setSchema({ ...rootSchema });
   }
 
   function removeProperty() {
@@ -40,69 +74,97 @@ function StringSchemaNode({
   }
 
   function checkIfAllValdiationsAdded() {
-    if (validations.length === schema.validations.length) return true;
+    if (validations.length === instanceSchema.validations.length) return true;
     return false;
   }
 
   return (
     <div className="schemaContainer">
-      <div className="connector"></div>
+      {instancePath.length > 0 && <div className="connector"></div>}
       <div className="schemaHeader">
-        <p
-          className="expandBtn"
+        <HoverableIcon
+          Icon={MdExpandMore}
           onClick={() => {
             setShowSchemaBody(!showSchemaBody);
           }}
-          style={{ transform: showSchemaBody ? `rotate(180deg)` : "" }}
-        >
-          v
-        </p>
-        <input
-          type="text"
-          value={schema.name}
-          onChange={(e) => {
-            schema.name = e.target.value;
-            setSchema({ ...rootSchema });
+          style={{
+            transform: showSchemaBody ? `rotate(180deg)` : "",
+            fontSize: 30,
+            color: "#bec5c8",
+            transition: "all 300ms linear",
           }}
         />
-        <div>STRING</div>
-        <button className="removeSchema" onClick={removeProperty}>
-          X
-        </button>
+        <input
+          className="schemaNameInput"
+          placeholder="schema name"
+          type="text"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+        <div
+          className="schemaType"
+          style={{
+            backgroundColor: "rgb(247, 236, 248)",
+            color: "rgb(180, 0, 200)",
+          }}
+        >
+          STRING
+        </div>
+        <HoverableIcon
+          Icon={IoClose}
+          onClick={removeProperty}
+          style={{
+            fontSize: 23,
+            color: "#bec5c8",
+            transition: "all 300ms linear",
+            marginLeft: 20,
+          }}
+        />
       </div>
       {showSchemaBody && (
         <div className="schemaBody">
-          {schema.validations.map((validation, index) => {
+          {instanceSchema.validations.map((validation, index) => {
+            const argType = validations.find(
+              (val) => val.name === validation.name
+            )?.argType;
+
             return (
               <div key={validation.name} className="validationDiv">
-                <div className="connector"></div>
-                <div>{validation.name}</div>
+                <div className="connector" style={{ top: 23 }}></div>
+                <div className="validationName">{validation.name}</div>
                 <input
-                  type="text"
+                  className="schemaNameInput"
+                  placeholder="value"
+                  type={argType === "number" ? "number" : "text"}
                   value={validation.value}
                   onChange={(e) => {
                     validation.value = e.target.value;
                     setSchema({ ...rootSchema });
                   }}
                 />
-                <button
-                  className="removeBtn"
-                  onClick={() => {
-                    schema.validations.splice(index, 1);
-                    setSchema({ ...rootSchema });
+                <HoverableIcon
+                  Icon={IoClose}
+                  onClick={() => removeValidation(index)}
+                  style={{
+                    fontSize: 23,
+                    color: "#bec5c8",
+                    transition: "all 300ms linear",
+                    marginLeft: 20,
                   }}
-                >
-                  X
-                </button>
+                />
               </div>
             );
           })}
           {!checkIfAllValdiationsAdded() && (
             <AddValidationBtn
               addValidation={addValidation}
-              validations={validations}
+              appliedValidations={instanceSchema.validations}
+              removeValidation={removeValidation}
             />
           )}
+          <div className="tailRemover"></div>
         </div>
       )}
     </div>
@@ -111,18 +173,21 @@ function StringSchemaNode({
 
 function AddValidationBtn({
   addValidation,
-  validations,
+  removeValidation,
+  appliedValidations,
 }: {
   addValidation: (type: string) => void;
-  validations: string[];
+  removeValidation: (index: number) => void;
+  appliedValidations: validation[];
 }) {
   const [showSelector, setShowSelector] = useState(false);
   return (
     <div className="addPropertyBtnContainer">
       <div className="connector"></div>
-      <div className="tailRemover"></div>
       <button
-        className="addValidationBtn"
+        className={`addValidationBtn ${
+          showSelector ? "addValidationBtnActive" : ""
+        }`}
         onClick={() => {
           setShowSelector(!showSelector);
         }}
@@ -131,19 +196,40 @@ function AddValidationBtn({
       </button>
       {showSelector && (
         <div className="typeSelector">
-          {validations.map((type) => {
-            return (
-              <p
-                onClick={() => {
-                  addValidation(type);
-                  setShowSelector(false);
-                }}
-                key={type}
-              >
-                {type.toUpperCase()}
-              </p>
-            );
-          })}
+          <ul>
+            {validations.map((validation) => {
+              const validationIndex = appliedValidations.findIndex(
+                (val) => val.name === validation.name
+              );
+              return (
+                <li
+                  key={validation.name}
+                  onClick={() => {
+                    console.log(validationIndex);
+                    if (validationIndex < 0) {
+                      addValidation(validation.name);
+                      setShowSelector(false);
+                    } else {
+                      removeValidation(validationIndex);
+                    }
+                  }}
+                >
+                  {validation.name.toUpperCase()}
+                  {validationIndex >= 0 && (
+                    <div
+                      style={{
+                        fontSize: 18,
+                        display: "grid",
+                        placeItems: "center",
+                      }}
+                    >
+                      <BsCheck />
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       )}
     </div>

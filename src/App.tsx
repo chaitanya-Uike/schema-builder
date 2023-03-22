@@ -1,11 +1,10 @@
 import { useState } from "react";
 import "./App.css";
 import ObjectSchemaNode from "./components/ObjectSchema";
-import Test from "./components/Test";
 import { ObjectSchema } from "./types";
 
 function App() {
-  const [schema, setSchema] = useState<ObjectSchema>({
+  const [schema, setSchema] = useState<ObjectSchema | null>({
     name: "employee_schema",
     type: "object",
     properties: [],
@@ -16,12 +15,14 @@ function App() {
 
   return (
     <div className="App">
-      <ObjectSchemaNode
-        instancePath={[]}
-        rootSchema={schema}
-        schema={schema}
-        setSchema={setSchema}
-      />
+      {schema && (
+        <ObjectSchemaNode
+          instancePath={[]}
+          rootSchema={schema}
+          instanceSchema={schema}
+          setSchema={setSchema}
+        />
+      )}
     </div>
   );
 }
