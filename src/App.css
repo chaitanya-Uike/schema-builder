@@ -52,6 +52,7 @@
 
 .schemaBody .validationDiv .validationName {
   color: #6f4bb7;
+  font-size: 14px;
 }
 
 .schemaBody .validationDiv input {

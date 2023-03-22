@@ -186,9 +186,8 @@ function AddValidationBtn({
     <div className="addPropertyBtnContainer">
       <div className="connector"></div>
       <button
-        className={`addValidationBtn ${
-          showSelector ? "addValidationBtnActive" : ""
-        }`}
+        className={`addValidationBtn ${showSelector ? "addValidationBtnActive" : ""
+          }`}
         onClick={() => {
           setShowSelector(!showSelector);
         }}

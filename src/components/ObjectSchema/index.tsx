@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { ObjectSchema } from "../../types";
+import { ObjectSchema, StringSchema } from "../../types";
 import StringSchemaNode from "../StringSchema";
 import { MdExpandMore } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
@@ -57,7 +57,6 @@ function ObjectSchemaNode({
         name: generatePropName(instanceSchema),
         type: "object",
         properties: [],
-        required: [],
         id: hash,
       });
     } else if (type === "string") {
@@ -141,8 +140,9 @@ function ObjectSchemaNode({
                   return (
                     <PropertyNodeWrapper
                       key={subSchema.id}
-                      instanceSchema={instanceSchema}
-                      propertyName={subSchema.name}
+                      instanceSchema={subSchema}
+                      rootSchema={rootSchema}
+                      setSchema={setSchema}
                     >
                       <ObjectSchemaNode
                         instancePath={[...instancePath, "properties", index]}
@@ -156,8 +156,9 @@ function ObjectSchemaNode({
                   return (
                     <PropertyNodeWrapper
                       key={subSchema.id}
-                      instanceSchema={instanceSchema}
-                      propertyName={subSchema.name}
+                      instanceSchema={subSchema}
+                      rootSchema={rootSchema}
+                      setSchema={setSchema}
                     >
                       <StringSchemaNode
                         instancePath={[...instancePath, "properties", index]}
@@ -183,11 +184,13 @@ function ObjectSchemaNode({
 function PropertyNodeWrapper({
   children,
   instanceSchema,
-  propertyName,
+  rootSchema,
+  setSchema
 }: {
   children: React.ReactNode;
-  instanceSchema: ObjectSchema;
-  propertyName: string;
+  instanceSchema: ObjectSchema | StringSchema;
+  rootSchema: ObjectSchema
+  setSchema: Dispatch<SetStateAction<ObjectSchema | null>>
 }) {
   return (
     <div className="propertyNodeWrapper">
@@ -196,14 +199,8 @@ function PropertyNodeWrapper({
         <p>*required</p>
         <CheckBox
           onChange={(checked) => {
-            if (checked) {
-              instanceSchema.required.push(propertyName);
-            } else {
-              const index = instanceSchema.required.findIndex(
-                (prop) => prop === propertyName
-              );
-              instanceSchema.required.splice(index, 1);
-            }
+            instanceSchema.required = checked
+            setSchema({ ...rootSchema })
           }}
         />
       </div>
@@ -222,9 +219,8 @@ function AddPropertyBtn({
     <div className="addPropertyBtnContainer">
       <div className="connector"></div>
       <button
-        className={`addValidationBtn ${
-          showSelector ? "addValidationBtnActive" : ""
-        }`}
+        className={`addValidationBtn ${showSelector ? "addValidationBtnActive" : ""
+          }`}
         onClick={() => {
           setShowSelector(!showSelector);
         }}

@@ -9,7 +9,6 @@ function App() {
     name: "employee_schema",
     type: "object",
     properties: [],
-    required: [],
     id: hashString("employee_schema"),
   });
 

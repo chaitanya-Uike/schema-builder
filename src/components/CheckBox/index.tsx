@@ -15,10 +15,9 @@ function CheckBox({ onChange }: Props) {
   }
 
   return (
-    <div className="checkboxWrapper">
+    <div className="checkboxWrapper" onClick={checkboxClicked}>
       <div
         className={`checkbox ${checked ? "checkboxActive" : ""}`}
-        onClick={checkboxClicked}
       >
         {checked && <BsCheck />}
       </div>
