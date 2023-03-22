@@ -45,13 +45,13 @@ function ObjectSchemaNode({
   }
 
   function removeProperty() {
-    let property = rootSchema as { [key: string]: any };
-    for (let i = 0; i < instancePath.length - 1; i++) {
-      const key = instancePath[i];
-      property = property[key];
-    }
-    const index = instancePath[instancePath.length - 1];
-    property = [...property.splice(index, 1)];
+    const index = instancePath.pop();
+    const property = instancePath.reduce((acc, currPath) => {
+      return acc[currPath];
+    }, rootSchema as { [key: string]: any });
+
+    property.splice(index, 1);
+    setSchema({ ...rootSchema });
   }
 
   return (
